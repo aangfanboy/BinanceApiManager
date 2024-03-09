@@ -10,7 +10,7 @@ class MarketDataFetcher:
         self.running = False
         self.wait_req = False
         self.type = type
-        self.symbol = symbol
+        self.symbol = symbol.lower()
 
         self.messages = []
 
@@ -18,7 +18,7 @@ class MarketDataFetcher:
         if self.type == 'futures':
             self.ws = websocket.WebSocketApp(f"wss://fstream.binance.com/ws/{self.symbol}@trade", on_message=self.on_message, on_error=self.on_error, on_close=self.stop)
         else:
-            self.ws = websocket.WebSocketApp(f"wss://stream.binance.com:9443/ws/{self.symbol}@trade", on_message=self.on_message, on_error=self.on_error, on_close=self.stop)
+            self.ws = websocket.WebSocketApp(f"wss://stream.binance.com/ws/{self.symbol}@trade", on_message=self.on_message, on_error=self.on_error, on_close=self.stop)
 
         self.thread = threading.Thread(target=self.ws.run_forever)
         self.thread.start()

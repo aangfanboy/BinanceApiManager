@@ -1,6 +1,5 @@
 import requests
 import logging
-import threading
 
 import time
 
@@ -8,38 +7,12 @@ class OldTradesFetcher:
     def __init__(self, type = 'futures', symbol = 'btcusdt', keep_milliseconds = True):
         self.ws = None
         self.type = type
-        self.symbol = symbol
+        self.symbol = symbol.lower() if type == 'futures' else symbol.upper()
         self.fetching = False
         self.modifing = False
         self.divider = 1000 if keep_milliseconds else 1
 
-        self.messages_large = []
         self.messages = []
-
-    def message_handler(self):
-        logging.info("Message handler thread started")
-        self.modifing = True
-
-        while self.modifing:
-            if len(self.messages_large) > 0:
-                [self.messages.append(
-                    [
-                        int(message['T']/self.divider),
-                        float(message['p']),
-                        float(message['q']),
-                    ]
-                ) for message in self.messages_large]
-                self.messages_large = []
-
-            else:
-                if not self.fetching:
-                    self.modifing = False
-
-                    break
-
-                time.sleep(0.1)
-
-        logging.info("Message handler thread terminated")
 
     def start(self, from_unix_time, until_unix_time):
         assert from_unix_time < until_unix_time
@@ -57,8 +30,6 @@ class OldTradesFetcher:
 
         from_id = None
         self.fetching = True
-
-        threading.Thread(target=self.message_handler).start()
 
         while True:
             if from_id:
@@ -92,7 +63,14 @@ class OldTradesFetcher:
 
                 break
 
-            self.messages_large.extend(trades)
+            [self.messages.append(
+                [
+                    int(message['T']/self.divider),
+                    float(message['p']),
+                    float(message['q']),
+                ]
+            ) for message in trades]
+
             from_id = trades[-1]['a']
             last_unix_time = trades[-1]['T']
 
