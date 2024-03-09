@@ -1,4 +1,5 @@
 ## Todo
 
 - [x] Init files made
-- [ ] Lower the data size by OldDataFetcher.py
+- [x] Lower the data size by OldDataFetcher.py
+- [ ] Make stream for current trade orders
