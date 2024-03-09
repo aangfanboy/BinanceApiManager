@@ -55,7 +55,7 @@ class MarketDataFetcher:
             return messages
 
         return self.messages
-        
+            
 
 
 # Path: binance-api-manager/MarketDataFetcher.py

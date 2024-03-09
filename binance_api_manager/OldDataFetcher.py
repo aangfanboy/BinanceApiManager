@@ -46,13 +46,12 @@ class OldTradesFetcher:
         assert len(f"{from_unix_time}") == 13
         assert len(f"{until_unix_time}") == 13
 
+        start_time = time.time()
+
         if self.type == 'futures':
             url = f"https://fapi.binance.com/fapi/v1/aggTrades?"
         else:
-            logging.error("Spot data fetching is not supported yet")
-            return
-        
-        start_time = time.time()
+            url = f"https://api.binance.com/api/v3/aggTrades?"
 
         logging.info(f"Fetching trades between {from_unix_time} and {until_unix_time}")
 

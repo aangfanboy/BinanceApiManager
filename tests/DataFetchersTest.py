@@ -6,7 +6,7 @@ from binance_api_manager import OldTradesFetcher
 
 class DataFetchersTest(unittest.TestCase):
     def test_market_data_fetcher(self):
-        fetcher = MarketDataFetcher(type='futures', symbol='btcusdt')
+        fetcher = MarketDataFetcher(type='futures', symbol='ETHUSDT')
         fetcher.start()
 
         time.sleep(3)
@@ -22,7 +22,7 @@ class DataFetchersTest(unittest.TestCase):
         self.assertFalse(fetcher.running)
 
     def test_old_data_fetcher(self):
-        fetcher = OldTradesFetcher(type='futures', symbol='btcusdt')
+        fetcher = OldTradesFetcher(type='futures', symbol='BTCUSDT')
         # fetch 3 minutes of data 
         fetcher.start(1646832042000, 1646832222000)
 
