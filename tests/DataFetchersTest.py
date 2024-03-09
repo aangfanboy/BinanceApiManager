@@ -13,7 +13,10 @@ class DataFetchersTest(unittest.TestCase):
 
         messages = fetcher.get_messages(clear=True)
         self.assertTrue(len(messages) > 0)
-        self.assertTrue(isinstance(messages[0], str))
+        self.assertTrue(isinstance(messages[0], list))
+        self.assertTrue(isinstance(messages[0][0], int))
+        self.assertTrue(isinstance(messages[0][1], float))
+        self.assertTrue(isinstance(messages[0][2], float))
         self.assertFalse(len(fetcher.messages) > 0)
 
         print(f"\nSample message: {messages[0]}")

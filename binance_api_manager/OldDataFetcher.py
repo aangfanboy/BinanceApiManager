@@ -68,6 +68,7 @@ class OldTradesFetcher:
                     int(message['T']/self.divider),
                     float(message['p']),
                     float(message['q']),
+                    int(message['m']),
                 ]
             ) for message in trades]
 
