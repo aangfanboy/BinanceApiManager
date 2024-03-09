@@ -46,12 +46,13 @@ class OldTradesFetcher:
         assert len(f"{from_unix_time}") == 13
         assert len(f"{until_unix_time}") == 13
 
-        start_time = time.time()
-
         if self.type == 'futures':
             url = f"https://fapi.binance.com/fapi/v1/aggTrades?"
         else:
-            url = f"https://api.binance.com/api/v1/aggTrades?"
+            logging.error("Spot data fetching is not supported yet")
+            return
+        
+        start_time = time.time()
 
         logging.info(f"Fetching trades between {from_unix_time} and {until_unix_time}")
 
@@ -60,7 +61,7 @@ class OldTradesFetcher:
 
         threading.Thread(target=self.message_handler).start()
 
-        while self.fetching:
+        while True:
             if from_id:
                 params = {
                     'symbol': self.symbol,
@@ -78,18 +79,19 @@ class OldTradesFetcher:
 
             if response.status_code != 200:
                 logging.error(f"Error fetching trades: {response.text}")
-                continue
+                
+                break
 
             trades = response.json()
 
             if len(trades) < 1000:
-                self.fetching = False
+                break
 
             if trades[-1]['T'] > until_unix_time:
                 while trades[-1]['T'] > until_unix_time:
                     trades.pop()
 
-                self.fetching = False
+                break
 
             self.messages_large.extend(trades)
             from_id = trades[-1]['a']
